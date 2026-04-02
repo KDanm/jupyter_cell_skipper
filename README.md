@@ -21,14 +21,6 @@ Insert a new pre-marked skip cell from the cell insert toolbar between cells.
 - No dependency on specific Jupyter extension versions — uses only stable VS Code Notebook APIs.
 - Running a skipped cell individually works exactly as normal. The skip only applies to the "Run All (Skip Marked)" command.
 
-## Settings
-
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `notebookCellSkip.skipBackgroundColor` | `rgba(255, 140, 0, 0.15)` | Background color for skipped cells |
-| `notebookCellSkip.skipBorderColor` | `rgba(255, 140, 0, 0.8)` | Border color for skipped cells |
-| `notebookCellSkip.skipTextOpacity` | `0.6` | Text opacity for skipped cells |
-
 ## License
 
 MIT

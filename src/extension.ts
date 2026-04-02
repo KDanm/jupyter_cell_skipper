@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import { registerCommands } from './commands';
 import { registerCellStatusBarProvider } from './statusBarProvider';
-import { registerDecorationProvider } from './decorationProvider';
 
 export function activate(context: vscode.ExtensionContext) {
     // Shared event emitter so all components react to metadata changes
@@ -22,7 +21,6 @@ export function activate(context: vscode.ExtensionContext) {
 
     registerCommands(context, metadataChanged);
     registerCellStatusBarProvider(context, metadataChanged.event);
-    registerDecorationProvider(context, metadataChanged.event);
 }
 
 export function deactivate() {}

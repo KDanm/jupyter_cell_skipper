@@ -67,37 +67,6 @@
         "mac": "cmd+alt+shift+enter",
         "when": "notebookEditorFocused"
       }
-    ],
-    "configuration": {
-      "title": "Notebook Cell Skip",
-      "properties": {
-        "notebookCellSkip.skipBackgroundColor": {
-          "type": "string",
-          "default": "rgba(255, 140, 0, 0.15)",
-          "description": "Background color for skipped cells"
-        },
-        "notebookCellSkip.skipBorderColor": {
-          "type": "string",
-          "default": "rgba(255, 140, 0, 0.8)",
-          "description": "Left border color for skipped cells"
-        },
-        "notebookCellSkip.skipTextOpacity": {
-          "type": "string",
-          "default": "0.6",
-          "description": "Text opacity for skipped cells (0.0 - 1.0)"
-        }
-      }
-    },
-    "colors": [
-      {
-        "id": "notebookCellSkip.skippedCellBackground",
-        "description": "Background color for cells marked as skipped on Run All",
-        "defaults": {
-          "dark": "#ff8c0015",
-          "light": "#ff8c0010",
-          "highContrast": "#ff8c0020"
-        }
-      }
     ]
   },
   "scripts": {
