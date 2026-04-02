@@ -2,7 +2,7 @@
   "name": "notebook-cell-skip",
   "displayName": "Notebook Cell Skip",
   "description": "Mark Jupyter notebook cells to be skipped during Run All while remaining individually executable",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "danielppublish",
   "engines": {
     "vscode": "^1.82.0"
@@ -51,23 +51,8 @@
           "group": "navigation/execute@2",
           "when": "notebookType == 'jupyter-notebook'"
         }
-      ],
-      "notebook/cell/insertToolbar": [
-        {
-          "command": "notebook-cell-skip.addSkipCell",
-          "group": "inline@3",
-          "when": "notebookType == 'jupyter-notebook'"
-        }
       ]
-    },
-    "keybindings": [
-      {
-        "command": "notebook-cell-skip.executeNotebook",
-        "key": "ctrl+alt+shift+enter",
-        "mac": "cmd+alt+shift+enter",
-        "when": "notebookEditorFocused"
-      }
-    ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

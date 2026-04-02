@@ -4,13 +4,15 @@ Mark Jupyter notebook cells to be **skipped during "Run All"** while keeping the
 
 Perfect for cells containing one-time setup, debugging snippets, or exploratory code that shouldn't run as part of your full notebook pipeline.
 
+![Showcase](assets/showcase.png)
+
 ## Features
 
 ### Toggle Skip
 Click the skip icon in any code cell's toolbar to mark it. Marked cells display a **"Skipped on Run All"** indicator.
 
 ### Run All (Skip Marked)
-Use the toolbar button or `Cmd+Alt+Shift+Enter` (`Ctrl+Alt+Shift+Enter` on Windows/Linux) to run all cells except those marked as skipped.
+Use the toolbar button to run all cells except those marked as skipped. Or run all of the cell including those you marked.
 
 ### Add Skip Cell
 Insert a new pre-marked skip cell from the cell insert toolbar between cells.
