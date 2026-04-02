@@ -1,59 +1,59 @@
 import * as vscode from 'vscode';
 
-const SKIP_KEY = 'skip_on_run_all';
+const SKIP_TAG = 'skip_on_run_all';
 
-/**
- * Check whether the vscode.ipynb built-in extension uses the "custom" wrapper
- * for cell metadata. This mirrors the approach used by vscode-jupyter-cell-tags.
- */
-function useCustomMetadata(): boolean {
-    const ipynbExt = vscode.extensions.getExtension('vscode.ipynb');
-    if (ipynbExt) {
-        const exports = ipynbExt.exports;
-        if (exports && typeof exports.dropCustomMetadata === 'function') {
-            return !exports.dropCustomMetadata();
+function getCellTags(cell: vscode.NotebookCell): string[] {
+    const meta = cell.metadata as Record<string, unknown>;
+
+    // Check custom.metadata.tags (in-memory)
+    const custom = meta.custom as Record<string, unknown> | undefined;
+    if (custom) {
+        const inner = custom.metadata as Record<string, unknown> | undefined;
+        if (inner && Array.isArray(inner.tags)) {
+            return inner.tags;
         }
     }
-    // Default: older VS Code versions use custom nesting
-    return true;
-}
 
-function getCellMetadataObj(cell: vscode.NotebookCell): Record<string, unknown> {
-    const meta = cell.metadata as Record<string, unknown>;
-    if (useCustomMetadata()) {
-        const custom = (meta.custom ?? {}) as Record<string, unknown>;
-        return (custom.metadata ?? {}) as Record<string, unknown>;
+    // Check top-level metadata.tags (after save/reload)
+    const topMeta = meta.metadata as Record<string, unknown> | undefined;
+    if (topMeta && Array.isArray(topMeta.tags)) {
+        return topMeta.tags;
     }
-    return (meta.metadata ?? {}) as Record<string, unknown>;
+
+    return [];
 }
 
 export function isCellSkipped(cell: vscode.NotebookCell): boolean {
-    const cellMeta = getCellMetadataObj(cell);
-    return cellMeta[SKIP_KEY] === true;
+    return getCellTags(cell).includes(SKIP_TAG);
 }
 
 export async function setCellSkipped(cell: vscode.NotebookCell, skipped: boolean): Promise<void> {
     const fullMeta = JSON.parse(JSON.stringify(cell.metadata ?? {})) as Record<string, unknown>;
 
-    if (useCustomMetadata()) {
-        const custom = (fullMeta.custom ?? {}) as Record<string, unknown>;
-        const innerMeta = (custom.metadata ?? {}) as Record<string, unknown>;
-        if (skipped) {
-            innerMeta[SKIP_KEY] = true;
-        } else {
-            delete innerMeta[SKIP_KEY];
-        }
-        custom.metadata = innerMeta;
-        fullMeta.custom = custom;
+    // Determine which path holds tags and update there
+    const custom = fullMeta.custom as Record<string, unknown> | undefined;
+    let tagsHolder: Record<string, unknown>;
+
+    if (custom) {
+        tagsHolder = (custom.metadata ?? {}) as Record<string, unknown>;
+        custom.metadata = tagsHolder;
     } else {
-        const innerMeta = (fullMeta.metadata ?? {}) as Record<string, unknown>;
-        if (skipped) {
-            innerMeta[SKIP_KEY] = true;
-        } else {
-            delete innerMeta[SKIP_KEY];
-        }
-        fullMeta.metadata = innerMeta;
+        tagsHolder = (fullMeta.metadata ?? {}) as Record<string, unknown>;
+        fullMeta.metadata = tagsHolder;
     }
+
+    const tags: string[] = Array.isArray(tagsHolder.tags) ? [...tagsHolder.tags] : [];
+
+    if (skipped && !tags.includes(SKIP_TAG)) {
+        tags.push(SKIP_TAG);
+    } else if (!skipped) {
+        const idx = tags.indexOf(SKIP_TAG);
+        if (idx !== -1) {
+            tags.splice(idx, 1);
+        }
+    }
+
+    tagsHolder.tags = tags;
 
     const edit = new vscode.WorkspaceEdit();
     const nbEdit = vscode.NotebookEdit.updateCellMetadata(cell.index, fullMeta);

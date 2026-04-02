@@ -95,18 +95,10 @@ export function registerCommands(
 
             const edit = new vscode.WorkspaceEdit();
 
-            // Build metadata with skip flag
-            const metadata: Record<string, unknown> = {};
-            const ipynbExt = vscode.extensions.getExtension('vscode.ipynb');
-            const useCustom = ipynbExt?.exports?.dropCustomMetadata
-                ? !ipynbExt.exports.dropCustomMetadata()
-                : true;
-
-            if (useCustom) {
-                metadata.custom = { metadata: { skip_on_run_all: true } };
-            } else {
-                metadata.metadata = { skip_on_run_all: true };
-            }
+            // Build metadata with skip tag
+            const metadata: Record<string, unknown> = {
+                metadata: { tags: ['skip_on_run_all'] },
+            };
 
             const newCell = new vscode.NotebookCellData(
                 vscode.NotebookCellKind.Code,

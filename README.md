@@ -17,7 +17,7 @@ Insert a new pre-marked skip cell from the cell insert toolbar between cells.
 
 ## How It Works
 
-- The skip flag is stored in standard **Jupyter cell metadata** (`skip_on_run_all`), so it persists across saves, reopens, and version control.
+- The skip flag is stored as a standard **Jupyter cell tag** (`skip_on_run_all`), so it persists across saves, reopens, and version control.
 - No dependency on specific Jupyter extension versions — uses only stable VS Code Notebook APIs.
 - Running a skipped cell individually works exactly as normal. The skip only applies to the "Run All (Skip Marked)" command.
 

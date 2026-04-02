@@ -12,7 +12,9 @@
   "categories": [
     "Notebooks"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onNotebook:jupyter-notebook"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
