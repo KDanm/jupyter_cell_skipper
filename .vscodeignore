@@ -7,4 +7,5 @@ tsconfig.json
 **/*.ts
 example.ipynb
 icon.svg
+assets/**
 out/**/*.map
