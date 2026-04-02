@@ -1,0 +1,110 @@
+{
+  "name": "notebook-cell-skip",
+  "displayName": "Notebook Cell Skip",
+  "description": "Mark Jupyter notebook cells to be skipped during Run All while remaining individually executable",
+  "version": "0.1.0",
+  "publisher": "danielk",
+  "engines": {
+    "vscode": "^1.82.0"
+  },
+  "categories": [
+    "Notebooks"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "notebook-cell-skip.toggleSkip",
+        "title": "Toggle Skip on Run All",
+        "icon": "$(debug-step-over)",
+        "category": "Notebook Cell Skip"
+      },
+      {
+        "command": "notebook-cell-skip.executeNotebook",
+        "title": "Run All (Skip Marked)",
+        "icon": "$(run-all)",
+        "category": "Notebook Cell Skip"
+      },
+      {
+        "command": "notebook-cell-skip.addSkipCell",
+        "title": "Add Skip Cell",
+        "icon": "$(add)",
+        "category": "Notebook Cell Skip"
+      }
+    ],
+    "menus": {
+      "notebook/cell/title": [
+        {
+          "command": "notebook-cell-skip.toggleSkip",
+          "group": "inline@1",
+          "when": "notebookType == 'jupyter-notebook' && notebookCellType == 'code'"
+        }
+      ],
+      "notebook/toolbar": [
+        {
+          "command": "notebook-cell-skip.executeNotebook",
+          "group": "navigation/execute@2",
+          "when": "notebookType == 'jupyter-notebook'"
+        }
+      ],
+      "notebook/cell/insertToolbar": [
+        {
+          "command": "notebook-cell-skip.addSkipCell",
+          "group": "inline@3",
+          "when": "notebookType == 'jupyter-notebook'"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "notebook-cell-skip.executeNotebook",
+        "key": "ctrl+alt+shift+enter",
+        "mac": "cmd+alt+shift+enter",
+        "when": "notebookEditorFocused"
+      }
+    ],
+    "configuration": {
+      "title": "Notebook Cell Skip",
+      "properties": {
+        "notebookCellSkip.skipBackgroundColor": {
+          "type": "string",
+          "default": "rgba(255, 140, 0, 0.15)",
+          "description": "Background color for skipped cells"
+        },
+        "notebookCellSkip.skipBorderColor": {
+          "type": "string",
+          "default": "rgba(255, 140, 0, 0.8)",
+          "description": "Left border color for skipped cells"
+        },
+        "notebookCellSkip.skipTextOpacity": {
+          "type": "string",
+          "default": "0.6",
+          "description": "Text opacity for skipped cells (0.0 - 1.0)"
+        }
+      }
+    },
+    "colors": [
+      {
+        "id": "notebookCellSkip.skippedCellBackground",
+        "description": "Background color for cells marked as skipped on Run All",
+        "defaults": {
+          "dark": "#ff8c0015",
+          "light": "#ff8c0010",
+          "highContrast": "#ff8c0020"
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.82.0",
+    "@types/node": "^18.0.0",
+    "typescript": "^5.3.0"
+  }
+}
