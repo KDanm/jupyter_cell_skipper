@@ -4,7 +4,7 @@ Mark Jupyter notebook cells to be **skipped during "Run All"** while keeping the
 
 Perfect for cells containing one-time setup, debugging snippets, or exploratory code that shouldn't run as part of your full notebook pipeline.
 
-![Showcase](assets/showcase.png)
+![Showcase](https://raw.githubusercontent.com/KDanm/jupyter_cell_skipper/main/assets/showcase.png)
 
 ## Features
 
