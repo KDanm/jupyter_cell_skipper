@@ -2,7 +2,7 @@
   "name": "notebook-cell-skip",
   "displayName": "Notebook Cell Skip",
   "description": "Mark Jupyter notebook cells to be skipped during Run All while remaining individually executable",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "publisher": "danielppublish",
   "engines": {
     "vscode": "^1.82.0"
@@ -24,20 +24,31 @@
     "commands": [
       {
         "command": "notebook-cell-skip.toggleSkip",
-        "title": "Toggle Skip on Run All",
+        "title": "Cycle Cell Tag",
         "icon": "$(debug-step-over)",
         "category": "Notebook Cell Skip"
       },
       {
         "command": "notebook-cell-skip.executeNotebook",
-        "title": "Run All (Skip Marked)",
+        "title": "Run All (Skip Selected)",
         "icon": "$(run-all)",
         "category": "Notebook Cell Skip"
       },
       {
+        "command": "notebook-cell-skip.selectSkippedTags",
+        "title": "Select Tags to Skip",
+        "icon": "$(filter)",
+        "category": "Notebook Cell Skip"
+      },
+      {
         "command": "notebook-cell-skip.addSkipCell",
-        "title": "Add Skip Cell",
+        "title": "Add Tagged Cell",
         "icon": "$(add)",
+        "category": "Notebook Cell Skip"
+      },
+      {
+        "command": "notebook-cell-skip.resetDefaults",
+        "title": "Reset Tags to Defaults",
         "category": "Notebook Cell Skip"
       }
     ],
@@ -53,6 +64,11 @@
         {
           "command": "notebook-cell-skip.executeNotebook",
           "group": "navigation/execute@2",
+          "when": "notebookType == 'jupyter-notebook'"
+        },
+        {
+          "command": "notebook-cell-skip.selectSkippedTags",
+          "group": "navigation/execute@3",
           "when": "notebookType == 'jupyter-notebook'"
         }
       ]

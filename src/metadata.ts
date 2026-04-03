@@ -1,7 +1,5 @@
 import * as vscode from 'vscode';
 
-const SKIP_TAG = 'skip_on_run_all';
-
 function getCellTags(cell: vscode.NotebookCell): string[] {
     const meta = cell.metadata as Record<string, unknown>;
 
@@ -23,14 +21,30 @@ function getCellTags(cell: vscode.NotebookCell): string[] {
     return [];
 }
 
-export function isCellSkipped(cell: vscode.NotebookCell): boolean {
-    return getCellTags(cell).includes(SKIP_TAG);
+/**
+ * Get the extension-managed tag on a cell, if any.
+ * Returns the first tag that matches one of the available tags, or undefined.
+ */
+export function getCellSkipTag(cell: vscode.NotebookCell, availableTags: string[]): string | undefined {
+    const tags = getCellTags(cell);
+    return tags.find(t => availableTags.includes(t));
 }
 
-export async function setCellSkipped(cell: vscode.NotebookCell, skipped: boolean): Promise<void> {
+/**
+ * Check if a cell should be skipped based on which tags are currently active for skipping.
+ */
+export function isCellSkipped(cell: vscode.NotebookCell, availableTags: string[], skippedTags: string[]): boolean {
+    const tag = getCellSkipTag(cell, availableTags);
+    return tag !== undefined && skippedTags.includes(tag);
+}
+
+/**
+ * Set the tag on a cell. Pass undefined to remove any extension-managed tag.
+ */
+export async function setCellTag(cell: vscode.NotebookCell, availableTags: string[], newTag: string | undefined): Promise<void> {
     const fullMeta = JSON.parse(JSON.stringify(cell.metadata ?? {})) as Record<string, unknown>;
 
-    // Determine which path holds tags and update there
+    // Determine which path holds tags
     const custom = fullMeta.custom as Record<string, unknown> | undefined;
     let tagsHolder: Record<string, unknown>;
 
@@ -42,15 +56,13 @@ export async function setCellSkipped(cell: vscode.NotebookCell, skipped: boolean
         fullMeta.metadata = tagsHolder;
     }
 
-    const tags: string[] = Array.isArray(tagsHolder.tags) ? [...tagsHolder.tags] : [];
+    // Remove any existing extension-managed tags
+    let tags: string[] = Array.isArray(tagsHolder.tags) ? [...tagsHolder.tags] : [];
+    tags = tags.filter(t => !availableTags.includes(t));
 
-    if (skipped && !tags.includes(SKIP_TAG)) {
-        tags.push(SKIP_TAG);
-    } else if (!skipped) {
-        const idx = tags.indexOf(SKIP_TAG);
-        if (idx !== -1) {
-            tags.splice(idx, 1);
-        }
+    // Add the new tag if specified
+    if (newTag) {
+        tags.push(newTag);
     }
 
     tagsHolder.tags = tags;

@@ -1,13 +1,15 @@
 import * as vscode from 'vscode';
 import { registerCommands } from './commands';
 import { registerCellStatusBarProvider } from './statusBarProvider';
+import { SkipState } from './skipState';
 
 export function activate(context: vscode.ExtensionContext) {
-    // Shared event emitter so all components react to metadata changes
     const metadataChanged = new vscode.EventEmitter<void>();
     context.subscriptions.push(metadataChanged);
 
-    // Also fire on any notebook document change that might include metadata edits
+    const skipState = new SkipState(context.workspaceState);
+    context.subscriptions.push({ dispose: () => skipState.dispose() });
+
     context.subscriptions.push(
         vscode.workspace.onDidChangeNotebookDocument((e) => {
             const hasMetadataChange = e.cellChanges.some(
@@ -19,8 +21,8 @@ export function activate(context: vscode.ExtensionContext) {
         })
     );
 
-    registerCommands(context, metadataChanged);
-    registerCellStatusBarProvider(context, metadataChanged.event);
+    registerCommands(context, metadataChanged, skipState);
+    registerCellStatusBarProvider(context, metadataChanged.event, skipState);
 }
 
 export function deactivate() {}
